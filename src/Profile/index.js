@@ -12,7 +12,7 @@ const GET_CURRENT_USER = gql`
   }
 `;
 
-function Profile() {
+export default function() {
   return (
     <Query query={GET_CURRENT_USER}>
       {({ data, loading }) => {
@@ -31,5 +31,3 @@ function Profile() {
     </Query>
   );
 }
-
-export default Profile;

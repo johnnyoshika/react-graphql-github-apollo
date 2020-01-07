@@ -1,10 +1,8 @@
 import React from 'react';
 import Profile from '../Profile';
 
-function App() {
+export default function() {
   return (
     <Profile />
   );
 }
-
-export default App;
