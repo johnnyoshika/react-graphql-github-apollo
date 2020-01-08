@@ -131,7 +131,21 @@ export default({
 
       <div>
         {!viewerHasStarred ? (
-          <Mutation mutation={ADD_STAR} variables={{ id }} update={updateAddStar}>
+          <Mutation
+            mutation={ADD_STAR}
+            variables={{ id }}
+            optimisticResponse={{
+              addStar: {
+                __typename: 'Mutation',
+                starrable: {
+                  __typename: 'Repository',
+                  id,
+                  viewerHasStarred: true
+                }
+              }
+            }}
+            update={updateAddStar}
+          >
             {(addStar, { data, loading, error }) => (
               <Button className={'RepositoryItem-title-action'} onClick={addStar}>
                 {stargazers.totalCount} Star
@@ -139,7 +153,21 @@ export default({
             )}
           </Mutation>
         ) : (
-          <Mutation mutation={REMOVE_STAR} variables={{ id }} update={updateRemoveStar}>
+          <Mutation
+            mutation={REMOVE_STAR}
+            variables={{ id }}
+            optimisticResponse={{
+              removeStar: {
+                __typename: 'Mutation',
+                starrable: {
+                  __typename: 'Repository',
+                  id,
+                  viewerHasStarred: false
+                }
+              }
+            }}
+            update={updateRemoveStar}
+          >
             {(removeStar, { data, loading, error }) => (
               <Button className={'RepositoryItem-title-action'} onClick={removeStar}>
                 {stargazers.totalCount} Unstar
