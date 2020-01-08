@@ -12,9 +12,6 @@ const ADD_STAR = gql`
       starrable {
         id
         viewerHasStarred
-        stargazers {
-          totalCount
-        }
       }
     }
   }
@@ -26,9 +23,6 @@ const REMOVE_STAR = gql`
       starrable {
         id
         viewerHasStarred
-        stargazers {
-          totalCount
-        }
       }
     }
   }
