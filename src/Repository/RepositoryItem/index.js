@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import Link from '../../Link';
 import Button from '../../Button';
+import REPOSITORY_FRAGMENT from '../fragments';
 
 import '../style.css';
 
@@ -28,6 +29,36 @@ const REMOVE_STAR = gql`
   }
 `;
 
+const updateAddStar = (
+  client,
+  { data: { addStar: { starrable: { id } } } }
+) => updateStarCount(client, id, 1);
+
+const updateRemoveStar = (
+  client,
+  { data: { removeStar: { starrable: { id } } } }
+) => updateStarCount(client, id, -1);
+
+const updateStarCount = (client, id, incrementBy) => {
+  const repository = client.readFragment({
+    id: `Repository:${id}`,
+    fragment: REPOSITORY_FRAGMENT
+  });
+
+  const totalCount = repository.stargazers.totalCount + incrementBy;
+  client.writeFragment({
+    id: `Repository:${id}`,
+    fragment: REPOSITORY_FRAGMENT,
+    data: {
+      ...repository,
+      stargazers: {
+        ...repository.stargazers,
+        totalCount
+      }
+    }
+  });
+};
+
 export default({
   id,
   name,
@@ -48,7 +79,7 @@ export default({
 
       <div>
         {!viewerHasStarred ? (
-          <Mutation mutation={ADD_STAR} variables={{ id }}>
+          <Mutation mutation={ADD_STAR} variables={{ id }} update={updateAddStar}>
             {(addStar, { data, loading, error }) => (
               <Button className={'RepositoryItem-title-action'} onClick={addStar}>
                 {stargazers.totalCount} Star
@@ -56,7 +87,7 @@ export default({
             )}
           </Mutation>
         ) : (
-          <Mutation mutation={REMOVE_STAR} variables={{ id }}>
+          <Mutation mutation={REMOVE_STAR} variables={{ id }} update={updateRemoveStar}>
             {(removeStar, { data, loading, error }) => (
               <Button className={'RepositoryItem-title-action'} onClick={removeStar}>
                 {stargazers.totalCount} Unstar
