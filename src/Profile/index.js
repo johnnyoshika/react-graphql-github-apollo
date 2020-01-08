@@ -36,18 +36,16 @@ const GET_REPOSITORIES_OF_CURRENT_USER = gql`
   }
 `;
 
-export default function() {
-  return (
-    <Query query={GET_REPOSITORIES_OF_CURRENT_USER}>
-      {({ data, loading }) => {
-        if (loading)
-          return <Loading />;
+export default () => (
+  <Query query={GET_REPOSITORIES_OF_CURRENT_USER}>
+    {({ data, loading }) => {
+      if (loading)
+        return <Loading />;
 
-        const { viewer } = data;
-        if (!viewer) return null;
-        
-        return <RepositoryList repositories={viewer.repositories} />;
-      }}
-    </Query>
-  );
-}
+      const { viewer } = data;
+      if (!viewer) return null;
+      
+      return <RepositoryList repositories={viewer.repositories} />;
+    }}
+  </Query>
+);
