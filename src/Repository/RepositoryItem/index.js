@@ -112,7 +112,7 @@ export default({
             variables={{ id }}
             optimisticResponse={{
               addStar: {
-                __typename: 'Mutation',
+                __typename: 'AddStarPayload',
                 starrable: {
                   __typename: 'Repository',
                   id,
@@ -137,7 +137,7 @@ export default({
             variables={{ id }}
             optimisticResponse={{
               removeStar: {
-                __typename: 'Mutation',
+                __typename: 'RemoveStarPayload',
                 starrable: {
                   __typename: 'Repository',
                   id,
@@ -168,7 +168,7 @@ export default({
           }}
           optimisticResponse={{
             updateSubscription: {
-              __typename: 'Mutation',
+              __typename: 'UpdateSubscriptionPayload',
               subscribable: {
                 __typename: 'Repository',
                 id,
