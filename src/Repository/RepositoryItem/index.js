@@ -13,6 +13,9 @@ const ADD_STAR = gql`
       starrable {
         id
         viewerHasStarred
+        stargazers {
+          totalCount
+        }
       }
     }
   }
@@ -24,40 +27,13 @@ const REMOVE_STAR = gql`
       starrable {
         id
         viewerHasStarred
+        stargazers {
+          totalCount
+        }
       }
     }
   }
 `;
-
-const updateAddStar = (
-  client,
-  { data: { addStar: { starrable: { id } } } }
-) => updateStarCount(client, id, 1);
-
-const updateRemoveStar = (
-  client,
-  { data: { removeStar: { starrable: { id } } } }
-) => updateStarCount(client, id, -1);
-
-const updateStarCount = (client, id, incrementBy) => {
-  const repository = client.readFragment({
-    id: `Repository:${id}`,
-    fragment: REPOSITORY_FRAGMENT
-  });
-
-  const totalCount = repository.stargazers.totalCount + incrementBy;
-  client.writeFragment({
-    id: `Repository:${id}`,
-    fragment: REPOSITORY_FRAGMENT,
-    data: {
-      ...repository,
-      stargazers: {
-        ...repository.stargazers,
-        totalCount
-      }
-    }
-  });
-};
 
 const WATCH_REPOSITORY = gql`
   mutation ($id: ID!, $viewerSubscription: SubscriptionState!) {
@@ -140,11 +116,14 @@ export default({
                 starrable: {
                   __typename: 'Repository',
                   id,
-                  viewerHasStarred: true
+                  viewerHasStarred: true,
+                  stargazers: {
+                    __typename: 'StargazerConnection',
+                    totalCount: stargazers.totalCount + 1
+                  }
                 }
               }
             }}
-            update={updateAddStar}
           >
             {(addStar, { data, loading, error }) => (
               <Button className={'RepositoryItem-title-action'} onClick={addStar}>
@@ -162,11 +141,14 @@ export default({
                 starrable: {
                   __typename: 'Repository',
                   id,
-                  viewerHasStarred: false
+                  viewerHasStarred: false,
+                  stargazers: {
+                    __typename: 'StargazerConnection',
+                    totalCount: stargazers.totalCount - 1
+                  }
                 }
               }
             }}
-            update={updateRemoveStar}
           >
             {(removeStar, { data, loading, error }) => (
               <Button className={'RepositoryItem-title-action'} onClick={removeStar}>
