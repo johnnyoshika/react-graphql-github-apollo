@@ -17,6 +17,17 @@ const ADD_STAR = gql`
   }
 `;
 
+const REMOVE_STAR = gql`
+  mutation($id: ID!) {
+    removeStar(input: { starrableId: $id }) {
+      starrable {
+        id
+        viewerHasStarred
+      }
+    }
+  }
+`;
+
 export default({
   id,
   name,
@@ -45,7 +56,13 @@ export default({
             )}
           </Mutation>
         ) : (
-          <span>{/* TODO: removeStar mutation */}</span>
+          <Mutation mutation={REMOVE_STAR} variables={{ id }}>
+            {(removeStar, { data, loading, error }) => (
+              <Button className={'RepositoryItem-title-action'} onClick={removeStar}>
+                {stargazers.totalCount} Unstar
+              </Button>
+            )}
+          </Mutation>
         )}
 
         {/* TODO: updateSubscription mutation */}
