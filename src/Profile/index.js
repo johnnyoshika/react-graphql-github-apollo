@@ -40,7 +40,7 @@ export default () => (
         return <ErrorMessage error={error} />;
 
       if (loading && !data)
-        return <Loading />;
+        return <Loading isCenter={true} />;
 
       const { viewer } = data;
       if (!viewer) return null;
