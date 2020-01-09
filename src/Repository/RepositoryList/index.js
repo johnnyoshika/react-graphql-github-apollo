@@ -1,5 +1,5 @@
 import React from 'react';
-import Loading from '../../Loading';
+import FetchMore from '../../FetchMore';
 import RepositoryItem from '../RepositoryItem';
 
 import '../style.css';
@@ -32,24 +32,16 @@ export default ({ repositories, loading, fetchMore }) => (
       </div>
     ))}
 
-    {loading ? (
-      <Loading />
-    ) : (
-      repositories.pageInfo.hasNextPage && (
-        <div style={{textAlign: 'center', margin: '20px'}}>
-          <button
-            type="button"
-            onClick={() => fetchMore({
-              variables: {
-                cursor: repositories.pageInfo.endCursor
-              },
-              updateQuery
-            })}
-          >
-          More repositories
-          </button>
-        </div>
-      )
-    )}
+    <FetchMore
+      loading={loading}
+      hasNextPage={repositories.pageInfo.hasNextPage}
+      variables={{
+        cursor: repositories.pageInfo.endCursor
+      }}
+      updateQuery={updateQuery}
+      fetchMore={fetchMore}
+    >
+      Repositories
+    </FetchMore>
   </>
 );
