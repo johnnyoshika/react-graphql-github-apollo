@@ -24,7 +24,7 @@ const getUpdateQuery = entry => (previousResult, { fetchMoreResult }) => {
   };
 };
 
-export default ({ repositories, loading, fetchMore, entry }) => (
+const RepositoryList = ({ repositories, loading, fetchMore, entry }) => (
   <>
     {repositories.edges.map(({ node }) => (
       <div key={node.id} className="RepositoryItem">
@@ -45,3 +45,5 @@ export default ({ repositories, loading, fetchMore, entry }) => (
     </FetchMore>
   </>
 );
+
+export default RepositoryList;

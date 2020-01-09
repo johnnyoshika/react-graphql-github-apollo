@@ -30,7 +30,7 @@ const GET_REPOSITORIES_OF_CURRENT_USER = gql`
 `;
 
 // Set notifyOnNetworkStatusChange to true to update `loading` on subsequent requests
-export default () => (
+const Profile = () => (
   <Query
     query={GET_REPOSITORIES_OF_CURRENT_USER}
     notifyOnNetworkStatusChange={true}
@@ -52,3 +52,5 @@ export default () => (
     }}
   </Query>
 );
+
+export default Profile;

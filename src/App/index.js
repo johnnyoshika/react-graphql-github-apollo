@@ -8,7 +8,7 @@ import * as routes from '../constants/routes';
 
 import './style.css';
 
-export default () => (
+const App = () => (
   <Router>
     <div className="App">
       <Navigation />
@@ -35,3 +35,5 @@ export default () => (
     </div>
   </Router>
 );
+
+export default App;

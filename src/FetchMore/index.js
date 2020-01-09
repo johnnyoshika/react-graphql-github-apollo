@@ -5,7 +5,7 @@ import { ButtonUnobtrusive } from '../Button';
 
 import './style.css';
 
-export default ({
+const FetchMore = ({
   loading,
   hasNextPage,
   variables,
@@ -28,3 +28,5 @@ export default ({
     )}
   </div>
 );
+
+export default FetchMore;

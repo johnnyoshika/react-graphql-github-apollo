@@ -87,7 +87,7 @@ const updateWatch = (
   });
 };
 
-export default({
+const RepositoryItem = ({
   id,
   name,
   url,
@@ -209,3 +209,5 @@ export default({
     </div>
   </div>
 );
+
+export default RepositoryItem;

@@ -25,7 +25,7 @@ const GET_REPOSITORIES_OF_ORGANIZATION = gql`
   ${REPOSITORY_FRAGMENT}
 `;
 
-export default ({ organizationName }) => (
+const Organization = ({ organizationName }) => (
   <Query
     query={GET_REPOSITORIES_OF_ORGANIZATION}
     variables={{
@@ -51,3 +51,5 @@ export default ({ organizationName }) => (
     }}
   </Query>
 );
+
+export default Organization;

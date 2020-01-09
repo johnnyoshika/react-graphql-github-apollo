@@ -5,7 +5,7 @@ import * as routes from '../../constants/routes';
 
 import './style.css';
 
-export default () => (
+const Navigation = () => (
   <header className="Navigation">
     <div className="Navigation-link">
       <Link to={routes.PROFILE}>Profile</Link>
@@ -15,3 +15,5 @@ export default () => (
     </div>
   </header>
 );
+
+export default Navigation;

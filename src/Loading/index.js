@@ -4,7 +4,7 @@ import './style.css';
 
 const TICK_RATE = 500;
 
-export default ({ isCenter }) => {
+const Loading = ({ isCenter }) => {
   const [dots, setDots] = useState(0);
 
   const onTick = () => setDots(dots => dots + 1);
@@ -19,3 +19,5 @@ export default ({ isCenter }) => {
 
   return <div className={classNames.join(' ')}>Loading {new Array(dots % 4).fill(0).map(dot => '.')}</div>;
 };
+
+export default Loading;
