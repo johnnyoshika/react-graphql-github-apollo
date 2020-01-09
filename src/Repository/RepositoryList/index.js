@@ -1,4 +1,5 @@
 import React from 'react';
+import Loading from '../../Loading';
 import RepositoryItem from '../RepositoryItem';
 
 import '../style.css';
@@ -23,7 +24,7 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
   };
 };
 
-export default ({ repositories, fetchMore }) => (
+export default ({ repositories, loading, fetchMore }) => (
   <>
     {repositories.edges.map(({ node }) => (
       <div key={node.id} className="RepositoryItem">
@@ -31,20 +32,24 @@ export default ({ repositories, fetchMore }) => (
       </div>
     ))}
 
-    {repositories.pageInfo.hasNextPage && (
-      <div style={{textAlign: 'center', margin: '20px'}}>
-        <button
-          type="button"
-          onClick={() => fetchMore({
-            variables: {
-              cursor: repositories.pageInfo.endCursor
-            },
-            updateQuery
-          })}
-        >
-        More repositories
-        </button>
-      </div>
+    {loading ? (
+      <Loading />
+    ) : (
+      repositories.pageInfo.hasNextPage && (
+        <div style={{textAlign: 'center', margin: '20px'}}>
+          <button
+            type="button"
+            onClick={() => fetchMore({
+              variables: {
+                cursor: repositories.pageInfo.endCursor
+              },
+              updateQuery
+            })}
+          >
+          More repositories
+          </button>
+        </div>
+      )
     )}
   </>
 );

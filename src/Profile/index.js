@@ -29,13 +29,17 @@ const GET_REPOSITORIES_OF_CURRENT_USER = gql`
   ${REPOSITORY_FRAGMENT}
 `;
 
+// Set notifyOnNetworkStatusChange to true to update `loading` on subsequent requests
 export default () => (
-  <Query query={GET_REPOSITORIES_OF_CURRENT_USER}>
+  <Query
+    query={GET_REPOSITORIES_OF_CURRENT_USER}
+    notifyOnNetworkStatusChange={true}
+  >
     {({ data, loading, error, fetchMore }) => {
       if (error)
         return <ErrorMessage error={error} />;
 
-      if (loading)
+      if (loading && !data)
         return <Loading />;
 
       const { viewer } = data;
@@ -43,6 +47,7 @@ export default () => (
       
       return <RepositoryList
         repositories={viewer.repositories}
+        loading={loading}
         fetchMore={fetchMore} />;
     }}
   </Query>
