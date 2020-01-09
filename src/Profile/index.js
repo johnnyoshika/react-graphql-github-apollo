@@ -6,13 +6,21 @@ import Loading from '../Loading';
 import ErrorMessage from '../Error';
 
 const GET_REPOSITORIES_OF_CURRENT_USER = gql`
-  {
+  query($cursor:String) {
     viewer {
-      repositories(first: 5, orderBy: { direction: DESC, field: STARGAZERS }) {
+      repositories(
+        first: 5,
+        orderBy: {direction: DESC, field: STARGAZERS}
+        after: $cursor
+      ) {
         edges {
           node {
             ...repository
           }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
         }
       }
     }
@@ -23,7 +31,7 @@ const GET_REPOSITORIES_OF_CURRENT_USER = gql`
 
 export default () => (
   <Query query={GET_REPOSITORIES_OF_CURRENT_USER}>
-    {({ data, loading, error }) => {
+    {({ data, loading, error, fetchMore }) => {
       if (error)
         return <ErrorMessage error={error} />;
 
@@ -33,7 +41,9 @@ export default () => (
       const { viewer } = data;
       if (!viewer) return null;
       
-      return <RepositoryList repositories={viewer.repositories} />;
+      return <RepositoryList
+        repositories={viewer.repositories}
+        fetchMore={fetchMore} />;
     }}
   </Query>
 );
