@@ -46,7 +46,9 @@ export default () => (
       return <RepositoryList
         repositories={viewer.repositories}
         loading={loading}
-        fetchMore={fetchMore} />;
+        fetchMore={fetchMore}
+        entry="viewer"
+      />;
     }}
   </Query>
 );

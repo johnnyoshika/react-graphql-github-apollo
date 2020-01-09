@@ -18,7 +18,7 @@ export default () => (
           path={routes.ORGANIZATION}
           component={() => (
             <div className="App-content_large-header">
-              <Organization />
+              <Organization organizationName={'the-road-to-learn-react'} />
             </div>
           )}
         />
