@@ -2,7 +2,7 @@ import React from 'react';
 
 import './style.css';
 
-export default ({
+const Button = ({
   children,
   className,
   color = 'black',
@@ -13,3 +13,5 @@ export default ({
     {children}
   </button>
 );
+
+export default Button;
