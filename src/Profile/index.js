@@ -36,14 +36,12 @@ export default () => (
     notifyOnNetworkStatusChange={true}
   >
     {({ data, loading, error, fetchMore }) => {
-      if (error)
-        return <ErrorMessage error={error} />;
+      if (error) return <ErrorMessage error={error} />;
 
-      if (loading && !data)
-        return <Loading isCenter={true} />;
+      if (loading && !data) return <Loading isCenter={true} />;
 
       const { viewer } = data;
-      if (!viewer) return null;
+      if (!viewer) return <Loading isCenter={true} />;
       
       return <RepositoryList
         repositories={viewer.repositories}
