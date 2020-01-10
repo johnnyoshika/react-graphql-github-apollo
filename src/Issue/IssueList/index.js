@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Query } from 'react-apollo';
+import { Query, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import IssueItem from '../IssueItem';
@@ -51,12 +51,34 @@ const TRANSITION_STATE = {
 
 const isShow = issueState => issueState !== ISSUE_STATES.NONE;
 
+const prefetchIssues = (
+  client,
+  repositoryOwner,
+  repositoryName,
+  issueState
+) => {
+  const nextIssueState = TRANSITION_STATE[issueState];
+  if (isShow(nextIssueState))
+    client.query({
+      query: GET_ISSUES_OF_REPOSITORY,
+      variables: {
+        repositoryOwner,
+        repositoryName,
+        issueState: nextIssueState
+      }
+    });
+};
+
 const Issues = ({ repositoryOwner, repositoryName }) => {
   const [issueState, setIssueState] = useState(ISSUE_STATES.NONE);
 
   return (
     <div className="Issues">
-      <IssueFilter issueState={issueState} onChangeIssueState={setIssueState} />
+      <IssueFilter
+        repositoryOwner={repositoryOwner}
+        repositoryName={repositoryName}
+        issueState={issueState}
+        onChangeIssueState={setIssueState} />
       {isShow(issueState) && (
         <Query
           query={GET_ISSUES_OF_REPOSITORY}
@@ -84,10 +106,27 @@ const Issues = ({ repositoryOwner, repositoryName }) => {
   );
 }
 
-const IssueFilter = ({ issueState, onChangeIssueState }) => (
-  <ButtonUnobtrusive onClick={() => onChangeIssueState(TRANSITION_STATE[issueState])}>
-    {TRANSITION_LABELS[issueState]}
-  </ButtonUnobtrusive>
+const IssueFilter = ({
+  repositoryOwner,
+  repositoryName,
+  issueState,
+  onChangeIssueState
+}) => (
+  <ApolloConsumer>
+    {client => (
+      <ButtonUnobtrusive
+        onClick={() => onChangeIssueState(TRANSITION_STATE[issueState])}
+        onMouseOver={() => prefetchIssues(
+          client,
+          repositoryOwner,
+          repositoryName,
+          issueState
+        )}
+      >
+        {TRANSITION_LABELS[issueState]}
+      </ButtonUnobtrusive>
+    )}
+  </ApolloConsumer>
 );
 
 const IssueList = ({ issues }) => (
