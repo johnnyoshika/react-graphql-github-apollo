@@ -4,6 +4,7 @@ import { Mutation } from 'react-apollo';
 import ErrorMessage from '../../Error';
 
 import ISSUECOMMENT_FRAGMENT from '../fragment';
+import { GET_COMMENTS_OF_ISSUE } from '../CommentList/queries';
 
 const ADD_COMMENT = gql`
   mutation($subjectId: ID!, $body: String!) {
@@ -18,7 +19,61 @@ const ADD_COMMENT = gql`
   ${ISSUECOMMENT_FRAGMENT}
 `;
 
-const CommentAdd = ({ issue }) =>  {
+const updateComments = ({
+    repositoryOwner,
+    repositoryName,
+    issue
+  },
+  client,
+  {
+    data: {
+      addComment: {
+        commentEdge
+      }
+    }
+  }
+) => {
+  const data = client.readQuery({
+    query: GET_COMMENTS_OF_ISSUE,
+    variables: {
+      repositoryOwner,
+      repositoryName,
+      issueNumber: issue.number
+    }
+
+  });
+  
+  client.writeQuery({
+    query: GET_COMMENTS_OF_ISSUE,
+    variables: {
+      repositoryOwner,
+      repositoryName,
+      issueNumber: issue.number
+    },
+    data: {
+      ...data,
+      repository: {
+        ...data.repository,
+        issue: {
+          ...data.repository.issue,
+          comments: {
+            ...data.repository.issue.comments,
+            edges: [
+              ...data.repository.issue.comments.edges,
+              commentEdge
+            ]
+          }
+        }
+      }
+    }
+  })
+};
+
+const CommentAdd = ({
+  issue,
+  repositoryOwner,
+  repositoryName
+}) =>  {
   const [value, setValue] = useState('');
   const onChange = event => setValue(event.target.value);
   const onSubmit = (event, addComment) => {
@@ -33,6 +88,11 @@ const CommentAdd = ({ issue }) =>  {
         subjectId: issue.id,
         body: value
       }}
+      update={(client, data) => updateComments({
+        repositoryOwner,
+        repositoryName,
+        issue
+      }, client, data)}
     >
       {(addComment, { data, loading, error }) => (
         <div>
