@@ -11,9 +11,7 @@ const IssueItem = ({ issue, repositoryOwner, repositoryName }) => {
 
   return (
     <div className="IssueItem">
-      <Button onClick={() => setShowComments(!showComments)}>
-        {showComments ? '-' : '+'}
-      </Button>
+      <CommentsToggle showComments={showComments} setShowComments={setShowComments} />
 
       <div className="IssueItem-content">
         <h3>
@@ -30,6 +28,15 @@ const IssueItem = ({ issue, repositoryOwner, repositoryName }) => {
       </div>
     </div>
   );
-}
+};
+
+const CommentsToggle = ({
+  showComments,
+  setShowComments
+}) => (
+  <Button onClick={() => setShowComments(!showComments)}>
+    {showComments ? '-' : '+'}
+  </Button>
+);
 
 export default IssueItem;
