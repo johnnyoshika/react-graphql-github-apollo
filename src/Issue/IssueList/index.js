@@ -56,9 +56,7 @@ const Issues = ({ repositoryOwner, repositoryName }) => {
 
   return (
     <div className="Issues">
-      <ButtonUnobtrusive onClick={() => setIssueState(TRANSITION_STATE[issueState])}>
-        {TRANSITION_LABELS[issueState]}
-      </ButtonUnobtrusive>
+      <IssueFilter issueState={issueState} onChangeIssueState={setIssueState} />
       {isShow(issueState) && (
         <Query
           query={GET_ISSUES_OF_REPOSITORY}
@@ -85,6 +83,12 @@ const Issues = ({ repositoryOwner, repositoryName }) => {
       </div>
   );
 }
+
+const IssueFilter = ({ issueState, onChangeIssueState }) => (
+  <ButtonUnobtrusive onClick={() => onChangeIssueState(TRANSITION_STATE[issueState])}>
+    {TRANSITION_LABELS[issueState]}
+  </ButtonUnobtrusive>
+);
 
 const IssueList = ({ issues }) => (
   <div className="IssueList">
