@@ -98,7 +98,7 @@ const Issues = ({ repositoryOwner, repositoryName }) => {
   
             if (!repository.issues.edges.length) return <div className="IssueList">No issues ...</div>;
   
-            return <IssueList issues={repository.issues} />;
+            return <IssueList issues={repository.issues} repositoryOwner={repositoryOwner} repositoryName={repositoryName} />;
           }}
         </Query>
       )}
@@ -129,10 +129,10 @@ const IssueFilter = ({
   </ApolloConsumer>
 );
 
-const IssueList = ({ issues }) => (
+const IssueList = ({ issues, repositoryOwner, repositoryName }) => (
   <div className="IssueList">
     {issues.edges.map(({ node }) => (
-      <IssueItem key={node.id} issue={node} />
+      <IssueItem key={node.id} issue={node} repositoryOwner={repositoryOwner} repositoryName={repositoryName} />
     ))}
   </div>
 );

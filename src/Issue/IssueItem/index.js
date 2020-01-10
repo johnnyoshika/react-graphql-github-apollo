@@ -1,10 +1,11 @@
 import React from 'react';
 
 import Link from '../../Link';
+import Comments from '../../Comment';
 
 import './style.css';
 
-const IssueItem = ({ issue }) => (
+const IssueItem = ({ issue, repositoryOwner, repositoryName }) => (
   <div className="IssueItem">
     {/* placeholder to add a show/hide comment button later */}
 
@@ -14,7 +15,10 @@ const IssueItem = ({ issue }) => (
       </h3>
       <div dangerouslySetInnerHTML={{ __html: issue.bodyHTML }} />
 
-      {/* placeholder to render a list of comments later */}
+      <Comments
+        repositoryOwner={repositoryOwner}
+        repositoryName={repositoryName}
+        issueNumber={issue.number} />
     </div>
   </div>
 );
