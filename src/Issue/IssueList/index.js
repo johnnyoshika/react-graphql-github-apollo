@@ -50,11 +50,9 @@ const isShow = issueState => issueState !== ISSUE_STATES.NONE;
 const Issues = ({ repositoryOwner, repositoryName }) => {
   const [issueState, setIssueState] = useState(ISSUE_STATES.NONE);
 
-  const onChangeIssuState = nextIssueState => setIssueState(nextIssueState);
-
   return (
     <div className="Issues">
-      <ButtonUnobtrusive onClick={() => onChangeIssuState(TRANSITION_STATE[issueState])}>
+      <ButtonUnobtrusive onClick={() => setIssueState(TRANSITION_STATE[issueState])}>
         {TRANSITION_LABELS[issueState]}
       </ButtonUnobtrusive>
       {isShow(issueState) && (
@@ -73,9 +71,17 @@ const Issues = ({ repositoryOwner, repositoryName }) => {
             const { repository } = data;
             if (!repository) return <Loading />;
   
-            if (!repository.issues.edges.length) return <div className="IssueList">No issues ...</div>;
+            const filterRepository = {
+              issues: {
+                edges: repository.issues.edges.filter(
+                  issue => issue.node.state === issueState
+                )
+              }
+            };
+
+            if (!filterRepository.issues.edges.length) return <div className="IssueList">No issues ...</div>;
   
-            return <IssueList issues={repository.issues} />;
+            return <IssueList issues={filterRepository.issues} />;
           }}
         </Query>
       )}
