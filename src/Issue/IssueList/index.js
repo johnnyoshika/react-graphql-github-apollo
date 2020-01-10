@@ -10,9 +10,13 @@ import { ButtonUnobtrusive } from '../../Button';
 import './style.css';
 
 const GET_ISSUES_OF_REPOSITORY = gql`
-  query($repositoryOwner: String!, $repositoryName: String!) {
+  query(
+    $repositoryOwner: String!
+    $repositoryName: String!
+    $issueState: IssueState!
+  ) {
     repository(name: $repositoryName, owner: $repositoryOwner) {
-      issues(first: 5) {
+      issues(first: 5, states: [$issueState]) {
         edges {
           node {
             id
@@ -60,7 +64,8 @@ const Issues = ({ repositoryOwner, repositoryName }) => {
           query={GET_ISSUES_OF_REPOSITORY}
           variables={{
             repositoryOwner,
-            repositoryName
+            repositoryName,
+            issueState
           }}
         >
           {( { data, loading, error }) => {
@@ -71,17 +76,9 @@ const Issues = ({ repositoryOwner, repositoryName }) => {
             const { repository } = data;
             if (!repository) return <Loading />;
   
-            const filterRepository = {
-              issues: {
-                edges: repository.issues.edges.filter(
-                  issue => issue.node.state === issueState
-                )
-              }
-            };
-
-            if (!filterRepository.issues.edges.length) return <div className="IssueList">No issues ...</div>;
+            if (!repository.issues.edges.length) return <div className="IssueList">No issues ...</div>;
   
-            return <IssueList issues={filterRepository.issues} />;
+            return <IssueList issues={repository.issues} />;
           }}
         </Query>
       )}
