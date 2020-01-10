@@ -35,13 +35,13 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
   };
 };
 
-const Comments = ({ repositoryOwner, repositoryName, issueNumber }) => (
+const Comments = ({ repositoryOwner, repositoryName, issue }) => (
   <Query
     query={GET_COMMENTS_OF_ISSUE}
     variables={{
       repositoryOwner,
       repositoryName,
-      issueNumber
+      issueNumber: issue.number
     }}
     notifyOnNetworkStatusChange={true}
   >
