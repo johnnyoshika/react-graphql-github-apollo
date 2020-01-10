@@ -3,6 +3,7 @@ import { Query } from 'react-apollo';
 
 import FetchMore from '../../FetchMore';
 import CommentItem from '../CommentItem';
+import CommentAdd from '../CommentAdd';
 import Loading from '../../Loading';
 import ErrorMessage from '../../Error';
 
@@ -55,6 +56,7 @@ const Comments = ({ repositoryOwner, repositoryName, issue }) => (
       const { repository: { issue: { comments } } } = data;
 
       return <CommentList
+        issue={issue}
         comments={comments}
         loading={loading}
         fetchMore={fetchMore} />;
@@ -63,6 +65,7 @@ const Comments = ({ repositoryOwner, repositoryName, issue }) => (
 );
 
 const CommentList = ({
+  issue,
   comments,
   loading,
   fetchMore
@@ -83,6 +86,7 @@ const CommentList = ({
     >
       Comments
     </FetchMore>
+    <CommentAdd issue={issue} />
   </div>
 );
 
