@@ -1,43 +1,15 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import FetchMore from '../../FetchMore';
 import CommentItem from '../CommentItem';
 import Loading from '../../Loading';
 import ErrorMessage from '../../Error';
 
+import { GET_COMMENTS_OF_ISSUE } from './queries';
+
 import './style.css';
 
-const GET_COMMENTS_OF_ISSUE = gql`
-  query(
-    $repositoryOwner: String!
-    $repositoryName: String!
-    $issueNumber: Int!
-    $cursor: String
-  ) {
-    repository(name: $repositoryName, owner: $repositoryOwner) {
-      issue(number: $issueNumber) {
-        id
-        comments(first: 3, after: $cursor) {
-          edges {
-            node {
-              id
-              bodyHTML
-              author {
-                login
-              }
-            }
-          }
-          pageInfo {
-            endCursor
-            hasNextPage
-          }
-        }
-      }
-    }
-  }
-`;
 
 const updateQuery = (previousResult, { fetchMoreResult }) => {
   if (!fetchMoreResult)
