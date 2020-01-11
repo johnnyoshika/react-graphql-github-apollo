@@ -1,6 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { useQuery } from '@apollo/react-hooks';
 
 import RepositoryList, { REPOSITORY_FRAGMENT } from '../Repository';
 import Loading from '../Loading';
@@ -25,31 +25,28 @@ const GET_REPOSITORIES_OF_ORGANIZATION = gql`
   ${REPOSITORY_FRAGMENT}
 `;
 
-const Organization = ({ organizationName }) => (
-  <Query
-    query={GET_REPOSITORIES_OF_ORGANIZATION}
-    variables={{
+const Organization = ({ organizationName }) => {
+  const { data, loading, error, fetchMore } = useQuery(GET_REPOSITORIES_OF_ORGANIZATION, {
+    variables: {
       organizationName
-    }}
-    skip={organizationName === ''}
-    notifyOnNetworkStatusChange={true}
-  >
-    {({ data, loading, error, fetchMore }) => {
-      if (error) return <ErrorMessage error={error} />;
+    },
+    skip: organizationName === '',
+    notifyOnNetworkStatusChange: true
+  });
 
-      if (loading && !data) return <Loading isCenter={true} />;
-      
-      const { organization } = data;
-      if (!organization) return <Loading isCenter={true} />;
+  if (error) return <ErrorMessage error={error} />;
+  
+  if (loading && !data) return <Loading isCenter={true} />;
+  
+  const { organization } = data;
+  if (!organization) return <Loading isCenter={true} />;
 
-      return <RepositoryList
-        loading={loading}
-        repositories={organization.repositories}
-        fetchMore={fetchMore}
-        entry="organization"
-      />
-    }}
-  </Query>
-);
+  return <RepositoryList
+    loading={loading}
+    repositories={organization.repositories}
+    fetchMore={fetchMore}
+    entry="organization"
+  />;
+};
 
 export default Organization;

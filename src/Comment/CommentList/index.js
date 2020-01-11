@@ -1,5 +1,5 @@
 import React from 'react';
-import { Query } from 'react-apollo';
+import { useQuery } from '@apollo/react-hooks';
 
 import FetchMore from '../../FetchMore';
 import CommentItem from '../CommentItem';
@@ -36,43 +36,42 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
   };
 };
 
-const Comments = ({ repositoryOwner, repositoryName, issue }) => (
-  <>
-    <Query
-      query={GET_COMMENTS_OF_ISSUE}
-      variables={{
-        repositoryOwner,
-        repositoryName,
-        issueNumber: issue.number
-      }}
-      notifyOnNetworkStatusChange={true}
-    >
-      {({ data, loading, error, fetchMore }) => {
-        if (error) return <ErrorMessage error={error} />;
-          
-        if (loading && !data) return <Loading />;
+const Comments = ({ repositoryOwner, repositoryName, issue }) => {
+  const { data, loading, error, fetchMore } = useQuery(GET_COMMENTS_OF_ISSUE, {
+    variables: {
+      repositoryOwner,
+      repositoryName,
+      issueNumber: issue.number
+    },
+    notifyOnNetworkStatusChange: true
+  });
 
-        if (!data.repository.issue.comments.edges.length) return <div className="CommentList">No comments ...</div>;
+  if (error) return <ErrorMessage error={error} />;
+            
+  if (loading && !data) return <Loading />;
 
-        const { repository: { issue: { comments } } } = data;
+  if (!data.repository.issue.comments.edges.length) return <div className="CommentList">No comments ...</div>;
 
-        return <CommentList
-          issue={issue}
-          comments={comments}
-          loading={loading}
-          fetchMore={fetchMore}
-          repositoryOwner={repositoryOwner}
-          repositoryName={repositoryName}
-        />;
-      }}
-    </Query>
-    <CommentAdd
-      issue={issue}
-      repositoryOwner={repositoryOwner}
-      repositoryName={repositoryName}
-    />
-  </>
-);
+  const { repository: { issue: { comments } } } = data;
+
+  return (
+    <>
+      <CommentList
+        issue={issue}
+        comments={comments}
+        loading={loading}
+        fetchMore={fetchMore}
+        repositoryOwner={repositoryOwner}
+        repositoryName={repositoryName}
+      />
+      <CommentAdd
+        issue={issue}
+        repositoryOwner={repositoryOwner}
+        repositoryName={repositoryName}
+      />
+    </>
+  );
+};
 
 const CommentList = ({
   comments,
