@@ -40,7 +40,6 @@ const updateComments = ({
       repositoryName,
       issueNumber: issue.number
     }
-
   });
   
   client.writeQuery({
