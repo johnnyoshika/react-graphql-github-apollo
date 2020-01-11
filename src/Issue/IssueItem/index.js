@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ApolloConsumer } from 'react-apollo';
+import { useApolloClient } from '@apollo/react-hooks';
 
 import Button from '../../Button';
 import Link from '../../Link';
@@ -59,22 +59,22 @@ const CommentsToggle = ({
   repositoryOwner,
   repositoryName,
   issueNumber
-}) => (
-  <ApolloConsumer>
-    {client => (
-      <Button
-        onClick={() => setShowComments(!showComments)}
-        onMouseOver={() => prefetchComments(
-          client,
-          repositoryOwner,
-          repositoryName,
-          issueNumber
-        )}
-      >
-        {showComments ? '-' : '+'}
-      </Button>
-    )}
-  </ApolloConsumer>
-);
+}) => {
+  const client = useApolloClient();
+
+  return (
+    <Button
+      onClick={() => setShowComments(!showComments)}
+      onMouseOver={() => prefetchComments(
+        client,
+        repositoryOwner,
+        repositoryName,
+        issueNumber
+      )}
+    >
+      {showComments ? '-' : '+'}
+    </Button>
+  );
+};
 
 export default IssueItem;
