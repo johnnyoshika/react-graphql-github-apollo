@@ -1,5 +1,7 @@
 import gql from 'graphql-tag';
 
+import ISSUECOMMENT_FRAGMENT from '../fragment';
+
 export const GET_COMMENTS_OF_ISSUE = gql`
   query(
     $repositoryOwner: String!
@@ -10,14 +12,11 @@ export const GET_COMMENTS_OF_ISSUE = gql`
     repository(name: $repositoryName, owner: $repositoryOwner) {
       issue(number: $issueNumber) {
         id
-        comments(first: 3, after: $cursor) {
+        comments(first: 3, after: $cursor)
+        @connection(key: "comments") {
           edges {
             node {
-              id
-              bodyHTML
-              author {
-                login
-              }
+              ...issueComment
             }
           }
           pageInfo {
@@ -28,4 +27,5 @@ export const GET_COMMENTS_OF_ISSUE = gql`
       }
     }
   }
+  ${ISSUECOMMENT_FRAGMENT}
 `;

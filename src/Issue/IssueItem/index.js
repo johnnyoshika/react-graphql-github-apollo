@@ -46,7 +46,7 @@ const IssueItem = ({ issue, repositoryOwner, repositoryName }) => {
           <Comments
             repositoryOwner={repositoryOwner}
             repositoryName={repositoryName}
-            issueNumber={issue.number} />
+            issue={issue} />
         )}
       </div>
     </div>

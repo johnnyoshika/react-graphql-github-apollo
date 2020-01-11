@@ -3,6 +3,7 @@ import { Query } from 'react-apollo';
 
 import FetchMore from '../../FetchMore';
 import CommentItem from '../CommentItem';
+import CommentAdd from '../CommentAdd';
 import Loading from '../../Loading';
 import ErrorMessage from '../../Error';
 
@@ -35,31 +36,42 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
   };
 };
 
-const Comments = ({ repositoryOwner, repositoryName, issueNumber }) => (
-  <Query
-    query={GET_COMMENTS_OF_ISSUE}
-    variables={{
-      repositoryOwner,
-      repositoryName,
-      issueNumber
-    }}
-    notifyOnNetworkStatusChange={true}
-  >
-    {({ data, loading, error, fetchMore }) => {
-      if (error) return <ErrorMessage error={error} />;
-        
-      if (loading && !data) return <Loading />;
+const Comments = ({ repositoryOwner, repositoryName, issue }) => (
+  <>
+    <Query
+      query={GET_COMMENTS_OF_ISSUE}
+      variables={{
+        repositoryOwner,
+        repositoryName,
+        issueNumber: issue.number
+      }}
+      notifyOnNetworkStatusChange={true}
+    >
+      {({ data, loading, error, fetchMore }) => {
+        if (error) return <ErrorMessage error={error} />;
+          
+        if (loading && !data) return <Loading />;
 
-      if (!data.repository.issue.comments.edges.length) return <div className="CommentList">No comments ...</div>;
+        if (!data.repository.issue.comments.edges.length) return <div className="CommentList">No comments ...</div>;
 
-      const { repository: { issue: { comments } } } = data;
+        const { repository: { issue: { comments } } } = data;
 
-      return <CommentList
-        comments={comments}
-        loading={loading}
-        fetchMore={fetchMore} />;
-    }}
-  </Query>
+        return <CommentList
+          issue={issue}
+          comments={comments}
+          loading={loading}
+          fetchMore={fetchMore}
+          repositoryOwner={repositoryOwner}
+          repositoryName={repositoryName}
+        />;
+      }}
+    </Query>
+    <CommentAdd
+      issue={issue}
+      repositoryOwner={repositoryOwner}
+      repositoryName={repositoryName}
+    />
+  </>
 );
 
 const CommentList = ({

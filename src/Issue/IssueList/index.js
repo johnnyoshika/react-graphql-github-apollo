@@ -9,6 +9,8 @@ import { ButtonUnobtrusive } from '../../Button';
 
 import './style.css';
 
+import ISSUE_FRAGMENT from '../fragment';
+
 const GET_ISSUES_OF_REPOSITORY = gql`
   query(
     $repositoryOwner: String!
@@ -19,17 +21,13 @@ const GET_ISSUES_OF_REPOSITORY = gql`
       issues(first: 5, states: [$issueState]) {
         edges {
           node {
-            id
-            number
-            state
-            title
-            url
-            bodyHTML
+            ...issue
           }
         }
       }
     }
   }
+  ${ISSUE_FRAGMENT}
 `;
 
 const ISSUE_STATES = {
