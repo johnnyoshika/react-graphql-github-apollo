@@ -87,6 +87,23 @@ const CommentAdd = ({
         subjectId: issue.id,
         body: value
       }}
+      optimisticResponse={{
+        addComment: {
+          __typename: 'Mutation',
+          commentEdge: {
+            __typename: 'IssueCommentEdge',
+            node: {
+              __typename: 'IssueComment',
+              id: new Date().getTime() + '',
+              author: {
+                __typename: 'User',
+                login: 'me'
+              },
+              bodyHTML: value
+            }
+          }
+        }
+      }}
       update={(client, data) => updateComments({
         repositoryOwner,
         repositoryName,
