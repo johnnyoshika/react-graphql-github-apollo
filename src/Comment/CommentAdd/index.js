@@ -92,6 +92,7 @@ const CommentAdd = ({
           node: {
             __typename: 'IssueComment',
             id: new Date().getTime() + '',
+            databaseId: new Date().getTime(),
             author: {
               __typename: 'User',
               login: 'me'
