@@ -27,7 +27,14 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
           ...previousResult.repository.issue.comments,
           ...fetchMoreResult.repository.issue.comments,
           edges: [
-            ...previousResult.repository.issue.comments.edges,
+            ...previousResult
+              .repository
+              .issue
+              .comments
+              .edges
+              .filter(
+                previousEdge => !fetchMoreResult.repository.issue.comments.edges.some(
+                  fetchMoreEdge => fetchMoreEdge.node.id === previousEdge.node.id)),
             ...fetchMoreResult.repository.issue.comments.edges
           ]
         }
